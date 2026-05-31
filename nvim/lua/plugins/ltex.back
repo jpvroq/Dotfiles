@@ -1,0 +1,31 @@
+return {
+	"barreiroleo/ltex_extra.nvim",
+	ft = { "markdown", "tex", "gitcommit", "plaintex" },
+	dependencies = { "neovim/nvim-lspconfig" },
+	opts = {
+		load_langs = { "ca", "es-ES" },
+		init_check = true,
+		path = vim.fn.expand("~/.config/nvim/spell"),
+		server_opts = nil,
+	},
+	config = function(_, opts)
+		local lsp = vim.lsp
+		local ltex = "ltex_plus"
+		local config = {
+			on_attach = function(client, bufnr)
+				require("ltex_extra").setup(opts)
+			end,
+			settings = {
+				ltex = {
+					language = "auto",
+				},
+			},
+		}
+
+		if lsp.config then
+			lsp.config(ltex, config)
+		else
+			require("lspconfig")[ltex].setup(config)
+		end
+	end,
+}
